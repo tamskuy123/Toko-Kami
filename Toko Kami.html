@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Situs Belanja</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+    .box {
+      background: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
+    input {
+      display: block;
+      margin-bottom: 10px;
+      padding: 8px;
+      width: 100%;
+    }
+    button {
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🛒 Toko Kami</h1>
+
+<!-- LOGIN / REGISTER -->
+<div class="box" id="authBox">
+  <h2>Login / Register</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="register()">Register</button>
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- PRODUK -->
+<div class="box" id="produkBox" style="display:none;">
+  <h2>Produk</h2>
+  <p>Gigis - Rp5.000</p>
+  <button onclick="tambah('Gigis')">Tambah</button>
+
+  <p>Revuy - Rp6.000</p>
+  <button onclick="tambah('Revuy')">Tambah</button>
+
+  <p>Kekeyi - Rp5.000</p>
+  <button onclick="tambah('Kekeyi')">Tambah</button>
+
+  <p>Tamskuy - Rp1.000.000</p>
+  <button onclick="tambah('Tamskuy')">Tambah</button>
+
+  <button onclick="logout()">Logout</button>
+</div>
+
+<!-- KERANJANG -->
+<div class="box" id="keranjangBox" style="display:none;">
+  <h2>Keranjang</h2>
+  <ul id="list"></ul>
+</div>
+
+<script>
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+  let keranjang = [];
+
+  function register() {
+    let u = username.value;
+    let p = password.value;
+
+    if (!u || !p) {
+      alert("Isi semua!");
+      return;
+    }
+
+    users.push({username: u, password: p});
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Akun berhasil dibuat!");
+  }
+
+  function login() {
+    let u = username.value;
+    let p = password.value;
+
+    let found = users.find(user => user.username === u && user.password === p);
+
+    if (found) {
+      alert("Login berhasil!");
+      authBox.style.display = "none";
+      produkBox.style.display = "block";
+      keranjangBox.style.display = "block";
+    } else {
+      alert("Akun tidak ditemukan!");
+    }
+  }
+
+  function logout() {
+    location.reload();
+  }
+
+  function tambah(nama) {
+    keranjang.push(nama);
+    tampil();
+  }
+
+  function hapus(i) {
+    keranjang.splice(i, 1);
+    tampil();
+  }
+
+  function tampil() {
+    list.innerHTML = "";
+    keranjang.forEach((item, i) => {
+      list.innerHTML += `<li>${item} <button onclick="hapus(${i})">Hapus</button></li>`;
+    });
+  }
+</script>
+
+</body>
+</html>
